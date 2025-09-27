@@ -28,7 +28,7 @@ def index():
 class RestaurantsResource(Resource):
     def get(self):
         restaurants = Restaurant.query.all()
-        return [r.to_dict(rules=('id', 'name', 'address')) for r in restaurants], 200
+        return [r.to_dict(only=('id', 'name', 'address')) for r in restaurants], 200
 
 
 class RestaurantByIdResource(Resource):
@@ -36,7 +36,7 @@ class RestaurantByIdResource(Resource):
         restaurant = Restaurant.query.get(id)
         if not restaurant:
             return {"error": "Restaurant not found"}, 404
-        return restaurant.to_dict(rules=('id', 'name', 'address', 'restaurant_pizzas')), 200
+        return restaurant.to_dict(only=('id', 'name', 'address', 'restaurant_pizzas')), 200
 
     def delete(self, id):
         restaurant = Restaurant.query.get(id)
@@ -50,7 +50,7 @@ class RestaurantByIdResource(Resource):
 class PizzasResource(Resource):
     def get(self):
         pizzas = Pizza.query.all()
-        return [p.to_dict(rules=('id', 'name', 'ingredients')) for p in pizzas], 200
+        return [p.to_dict(only=('id', 'name', 'ingredients')) for p in pizzas], 200
 
 
 class RestaurantPizzasResource(Resource):
@@ -71,7 +71,7 @@ class RestaurantPizzasResource(Resource):
             )
             db.session.add(restaurant_pizza)
             db.session.commit()
-            return restaurant_pizza.to_dict(rules=(
+            return restaurant_pizza.to_dict(only=(
                 'id', 'price', 'pizza_id', 'restaurant_id', 'pizza', 'restaurant'
             )), 201
         except Exception:
